@@ -13,9 +13,13 @@ axios.defaults.baseURL = "https://6197aefa164fa60017c22d4f.mockapi.io/contacts";
 
 export const fetchContacts = createAsyncThunk(
   "contacts/fetchContacts",
-  async () => {
-    const contacts = await axios.get("./contacts");
-    return contacts.data;
+  async (_, { rejectWithValue }) => {
+    try {
+      const contacts = await axios.get("./contacts");
+      return contacts.data;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
   }
 );
 
@@ -50,17 +54,25 @@ export const fetchContacts = createAsyncThunk(
 
 export const addContact = createAsyncThunk(
   "contacts/addContact",
-  async ({ name, number }) => {
-    const response = await axios.post("/contacts", { name, number });
-    return response.data;
+  async ({ name, number }, { rejectWithValue }) => {
+    try {
+      const response = await axios.post("/contacts", { name, number });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
   }
 );
 
 export const deleteContact = createAsyncThunk(
   "contact/deleteContact",
-  async (contactId) => {
-    const response = await axios.delete(`contacts/${contactId}`);
-    return response.data;
+  async (contactId, { rejectWithValue }) => {
+    try {
+      const response = await axios.delete(`contacts/${contactId}`);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
   }
 );
 
