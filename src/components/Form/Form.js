@@ -2,7 +2,7 @@ import React, { useState, memo } from "react";
 import shortid from "shortid";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
-import contactsActions from "../../redux/contacts/contacts-actions";
+import contactsOperations from "../../redux/contacts/contacts-operations";
 import { getContacts } from "../../redux/contacts/contacts-selectors";
 import styles from "./Form.module.css";
 
@@ -32,7 +32,7 @@ const Form = () => {
       return;
     }
 
-    dispatch(contactsActions.addContact(state));
+    dispatch(contactsOperations.addContact(state));
     reset();
   };
 

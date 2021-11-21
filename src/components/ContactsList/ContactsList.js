@@ -3,37 +3,53 @@ import styles from "./ContactsList.module.css";
 import PropTypes from "prop-types";
 // import { connect } from "react-redux";
 import { useSelector, useDispatch } from "react-redux";
-import { getFilteredContacts } from "../../redux/contacts/contacts-selectors";
-import contactsActions from "../../redux/contacts/contacts-actions";
+import {
+  getFilteredContacts,
+  isLoadingContacts,
+} from "../../redux/contacts/contacts-selectors";
+import contactsOperations from "../../redux/contacts/contacts-operations";
 import { useEffect } from "react";
 
 export default function ContactsList() {
   const contacts = useSelector(getFilteredContacts);
+  const loaderContacts = useSelector(isLoadingContacts);
 
   const dispatch = useDispatch();
-  const onDeleteContact = (id) => dispatch(contactsActions.deleteContact(id));
+  const onDeleteContact = (id) =>
+    dispatch(contactsOperations.deleteContact(id));
+
+  const onfetchContacts = () => dispatch(contactsOperations.fetchContacts());
+
+  useEffect(() => {
+    onfetchContacts();
+  }, []);
 
   useEffect(() => {
     localStorage.setItem("items", JSON.stringify(contacts));
   }, [contacts]);
 
-  return contacts.length === 0 ? (
-    <div> No contacts </div>
-  ) : (
-    <ul className={styles.list}>
-      {contacts.map(({ id, name, number }) => (
-        <li key={id} className={styles.item}>
-          {name}: {number}
-          <button
-            className={styles.button}
-            type="button"
-            onClick={() => onDeleteContact(id)}
-          >
-            Delete
-          </button>
-        </li>
-      ))}
-    </ul>
+  return (
+    <>
+      {loaderContacts && <h1>Загружаем...</h1>}
+      {contacts.length === 0 ? (
+        <div> No contacts </div>
+      ) : (
+        <ul className={styles.list}>
+          {contacts.map(({ id, name, number }) => (
+            <li key={id} className={styles.item}>
+              {name}: {number}
+              <button
+                className={styles.button}
+                type="button"
+                onClick={() => onDeleteContact(id)}
+              >
+                Delete
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </>
   );
 }
 ContactsList.defaultProps = {
