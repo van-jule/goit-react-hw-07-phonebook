@@ -1,3 +1,4 @@
+import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import {
   fetchContactsRequest,
@@ -13,14 +14,26 @@ import {
 
 axios.defaults.baseURL = "https://6197aefa164fa60017c22d4f.mockapi.io/contacts";
 
-const fetchContacts = () => (dispatch) => {
-  dispatch(fetchContactsRequest);
+const fetchContacts = createAsyncThunk("contacts/fetchContacts", async () => {
+  const contacts = await axios.get("./contacts");
+  return contacts;
+});
 
-  axios
-    .get("./contacts")
-    .then(({ data }) => dispatch(fetchContactsSuccess(data)))
-    .catch((error) => dispatch(fetchContactsError(error)));
-};
+// const fetchContacts = () => async (dispatch) => {
+//   dispatch(fetchContactsRequest);
+
+//   try {
+//     const { data } = await axios.get("./contacts");
+//     dispatch(fetchContactsSuccess(data));
+//   } catch (error) {
+//     dispatch(fetchContactsError(error));
+//   }
+
+//   //   axios
+//   //     .get("./contacts")
+//   //     .then(({ data }) => dispatch(fetchContactsSuccess(data)))
+//   //     .catch((error) => dispatch(fetchContactsError(error)));
+// };
 
 const addContact =
   ({ name, number }) =>

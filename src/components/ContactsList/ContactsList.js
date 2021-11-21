@@ -3,30 +3,25 @@ import styles from "./ContactsList.module.css";
 import PropTypes from "prop-types";
 // import { connect } from "react-redux";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  getFilteredContacts,
-  isLoadingContacts,
-} from "../../redux/contacts/contacts-selectors";
-import contactsOperations from "../../redux/contacts/contacts-operations";
+import { contactsSelectors, contactsOperations } from "redux/contacts";
 import { useEffect } from "react";
 
 export default function ContactsList() {
-  const contacts = useSelector(getFilteredContacts);
-  const loaderContacts = useSelector(isLoadingContacts);
+  const contacts = useSelector(contactsSelectors.getFilteredContacts);
+  const loaderContacts = useSelector(contactsSelectors.isLoadingContacts);
 
   const dispatch = useDispatch();
+
   const onDeleteContact = (id) =>
     dispatch(contactsOperations.deleteContact(id));
 
-  const onfetchContacts = () => dispatch(contactsOperations.fetchContacts());
-
   useEffect(() => {
-    onfetchContacts();
-  }, []);
+    dispatch(contactsOperations.fetchContacts());
+  }, [dispatch]);
 
-  useEffect(() => {
-    localStorage.setItem("items", JSON.stringify(contacts));
-  }, [contacts]);
+  // useEffect(() => {
+  //   localStorage.setItem("items", JSON.stringify(contacts));
+  // }, [contacts]);
 
   return (
     <>

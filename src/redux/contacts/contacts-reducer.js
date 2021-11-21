@@ -12,6 +12,7 @@ import {
   fetchContactsSuccess,
   fetchContactsError,
 } from "./contacts-actions";
+import fetchContacts from "./contacts-operations";
 
 const initialStateItems = JSON.parse(localStorage.getItem("items")) || [
   { id: "id-1", name: "Rosie Simpson", number: "459-12-56" },
@@ -21,16 +22,16 @@ const initialStateItems = JSON.parse(localStorage.getItem("items")) || [
 ];
 
 const items = createReducer(initialStateItems, {
-  [fetchContactsSuccess]: (_, { payload }) => payload,
+  [fetchContacts.fulfilled]: (_, { payload }) => payload,
   [addContactSuccess]: (state, { payload }) => [...state, payload],
   [deleteContactSuccess]: (state, { payload }) =>
     state.filter(({ id }) => id !== payload),
 });
 
 const loading = createReducer(false, {
-  [fetchContactsRequest]: () => true,
-  [fetchContactsSuccess]: () => false,
-  [fetchContactsError]: () => false,
+  [fetchContacts.pending]: () => true,
+  [fetchContacts.fulfilled]: () => false,
+  [fetchContacts.rejected]: () => false,
 
   [addContactRequest]: () => true,
   [addContactSuccess]: () => false,
@@ -45,7 +46,12 @@ const filter = createReducer("", {
   [changeFilter]: (_, { payload }) => payload,
 });
 
-const error = createReducer(null, {});
+const error = createReducer(null, {
+  [fetchContacts.rejected]: (_, { payload }) => payload,
+  [fetchContacts.pending]: () => null,
+  [addContactError]: (_, { payload }) => payload,
+  [deleteContactError]: (_, { payload }) => payload,
+});
 
 export default combineReducers({
   items,

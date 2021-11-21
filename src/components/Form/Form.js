@@ -2,14 +2,13 @@ import React, { useState, memo } from "react";
 import shortid from "shortid";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
-import contactsOperations from "../../redux/contacts/contacts-operations";
-import { getContacts } from "../../redux/contacts/contacts-selectors";
+import { contactsSelectors, contactsOperations } from "redux/contacts";
 import styles from "./Form.module.css";
 
 const Form = () => {
   const [state, setState] = useState({ name: "", number: "" });
 
-  const contacts = useSelector(getContacts);
+  const contacts = useSelector(contactsSelectors.getContacts);
   const dispatch = useDispatch();
 
   const nameInputId = shortid.generate();
