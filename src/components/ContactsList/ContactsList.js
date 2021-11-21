@@ -19,10 +19,6 @@ export default function ContactsList() {
     dispatch(contactsOperations.fetchContacts());
   }, [dispatch]);
 
-  // useEffect(() => {
-  //   localStorage.setItem("items", JSON.stringify(contacts));
-  // }, [contacts]);
-
   return (
     <>
       {loaderContacts && <h1>Загружаем...</h1>}
