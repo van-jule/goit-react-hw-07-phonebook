@@ -11,11 +11,13 @@ import {
 
 axios.defaults.baseURL = "https://6197aefa164fa60017c22d4f.mockapi.io/contacts";
 
-const fetchContacts = createAsyncThunk("contacts/fetchContacts", async () => {
-  const contacts = await axios.get("./contacts");
-  console.log("contacts", contacts.data);
-  return contacts.data;
-});
+export const fetchContacts = createAsyncThunk(
+  "contacts/fetchContacts",
+  async () => {
+    const contacts = await axios.get("./contacts");
+    return contacts.data;
+  }
+);
 
 // const fetchContacts = () => async (dispatch) => {
 //   dispatch(fetchContactsRequest);
@@ -46,27 +48,27 @@ const fetchContacts = createAsyncThunk("contacts/fetchContacts", async () => {
 //       .catch((error) => dispatch(addContactError(error)));
 //   };
 
-const addContact = createAsyncThunk(
+export const addContact = createAsyncThunk(
   "contacts/addContact",
   async ({ name, number }) => {
-    // const contact = { name, number };
     const response = await axios.post("/contacts", { name, number });
-    console.log("response!!! addContact", response);
-    return response;
+    return response.data;
   }
 );
 
-const deleteContact = (contactId) => (dispatch) => {
-  dispatch(deleteContactRequest());
+export const deleteContact = createAsyncThunk(
+  "contact/deleteContact",
+  async (contactId) => {
+    const response = await axios.delete(`contacts/${contactId}`);
+    return response.data;
+  }
+);
 
-  axios
-    .delete(`contacts/${contactId}`)
-    .then(() => dispatch(deleteContactSuccess(contactId)))
-    .catch((error) => dispatch(deleteContactError(error)));
-};
+// export const deleteContact = (contactId) => (dispatch) => {
+//   dispatch(deleteContactRequest());
 
-export default {
-  addContact,
-  deleteContact,
-  fetchContacts,
-};
+//   axios
+//     .delete(`contacts/${contactId}`)
+//     .then(() => dispatch(deleteContactSuccess(contactId)))
+//     .catch((error) => dispatch(deleteContactError(error)));
+// };
